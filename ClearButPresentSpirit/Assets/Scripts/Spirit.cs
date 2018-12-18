@@ -10,7 +10,7 @@ public class Spirit : MonoBehaviour
 
 	public void ClosestAction(float Distance)
 	{
-		Appear(Distance, DifficultyDistance);
+		//Appear(Distance, DifficultyDistance);
 	}
 	public Color c = new Color(1, 1, 1, 1);
 	private void Appear(float MyDist, float Difficulty)

@@ -5,7 +5,8 @@ using UnityEngine;
 public class GamePlay : MonoBehaviour 
 {
 	public float RemainingTime;
-	public int Ghosts;
+	public IntVariable StartingGhostCount;
+	private int Ghosts = 0;
 
 	public UnityEngine.UI.Text Timer;
 	public AudioSource SoundSource;
@@ -18,13 +19,19 @@ public class GamePlay : MonoBehaviour
 	private float MyClosestDistance = 9999;
 
 	private bool Silence = false;
-	
+
+
+	public UnityEngine.UI.Image Soundbar;
+
 	void Start () 
 	{
 		//ClosestGhost = new FloatVariable();
 		instance = this;
-		if (Ghosts > 0)
+		if (StartingGhostCount.Value > 0)
+		{
+			Ghosts = StartingGhostCount.Value;
 			PopulateGhosts();
+		}
 		else
 			SetCountOfGhosts();
 	}
@@ -60,6 +67,7 @@ public class GamePlay : MonoBehaviour
 					}
 				}
 			}
+			
 			ClosestGhost.item = MyClosestGhost;
 			ClosestGhost.Value = MyClosestDistance;
 			Spirit mySpirit = MyClosestGhost.GetComponent<Spirit>();
@@ -67,11 +75,31 @@ public class GamePlay : MonoBehaviour
 			{
 				mySpirit.ClosestAction(MyClosestDistance);
 			}
+			
 		}
+
+		//For the SoundBar
+		SetSoundBarSize(1 - (MyClosestDistance / DifficultyDistance));
 
 		Silence = false;
 		MyClosestDistance = 999;
 	}
+
+	public void SetSoundBarSize(float percentage)
+	{
+		if (percentage > -0.0000001)
+		{
+			Soundbar.transform.localScale = new Vector3(percentage, 1, 1);
+			Color c = Soundbar.color;
+			c.a = percentage;
+			Soundbar.color = c;
+		}
+		else
+		{
+			SetSoundBarSize(0);
+		}
+	}
+
 
 	// Update is called once per frame
 	void Update () 

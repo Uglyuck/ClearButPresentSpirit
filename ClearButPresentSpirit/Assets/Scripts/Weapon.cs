@@ -6,10 +6,11 @@ public class Weapon : MonoBehaviour
 {
 	public float range = 1;
 	private GameObject AttackedObject;
-	
+	private AnimateScript AS;
+	private bool Hit;
 	// Use this for initialization
 	void Start () {
-		
+		AS = GetComponent<AnimateScript>();
 	}
 	
 	public bool attack()
@@ -24,13 +25,23 @@ public class Weapon : MonoBehaviour
 		SetAnimation(Animations.Miss);
 		return false;
 	}
+	public void Recover()
+	{
+		GamePlay.instance.RemoveGhost(AttackedObject);
+	}
 
 	private enum Animations { Hit, Miss, Charge };
 	private void SetAnimation(Animations hit)
 	{
 		if(hit == Animations.Hit)
 		{
-			AttackEnd();
+			Hit = true;
+			AS.SetAnimations(AnimateScript.Animations.Hit, 0);
+		}
+		else
+		{
+			Hit = false;
+			AS.SetAnimations(AnimateScript.Animations.Miss, 0);
 		}
 	}
 	public void AttackEnd()
